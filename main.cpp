@@ -19,7 +19,7 @@ void render_left(const string& typed, const string& words, int cursor_x, int cur
 }
 
 // Renders the characters to the right of the cursor.
-void render_right(const string& typed, string& words, int cursor_x, int cursor_y) {
+void render_right(const string& typed, const string& words, int cursor_x, int cursor_y) {
   size_t pos = typed.size();
   for (size_t i = 0; i < words.size(); i++) {
     int x_pos = cursor_x + i;
@@ -78,10 +78,10 @@ int main() {
   while (true) {
     // Read input from keyboard.
     int in = getch();
-    if (in == 27) break; // ESC to exit.
-    if (('a' <= (char)in && (char)in <= 'z') || (char)in == ' ') {
-      // Append input to string of typed characters.
-      typed += in;
+    if (in == 27) break;
+    if (('a' <= (char)in && (char)in <= 'z') || (char)in == ' ' || in == 127) {
+      if (in == 127) { if (!typed.empty()) typed.erase(typed.size() - 1, 1);
+      } else typed += in;
 
       // Render the test.
       clear();
