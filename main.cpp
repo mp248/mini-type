@@ -19,7 +19,7 @@ void render_left(const string& typed, const string& words, int cursor_x, int cur
 }
 
 // Renders the characters to the right of the cursor.
-void render_right(const string& typed, const string& words, int cursor_x, int cursor_y) {
+void render_right(const string& typed, string& words, int cursor_x, int cursor_y) {
   size_t pos = typed.size();
   for (size_t i = 0; i < words.size(); i++) {
     int x_pos = cursor_x + i;
@@ -44,7 +44,7 @@ int main() {
   // Color pairs.
   init_pair(1, COLOR_GREEN, -1);          // Correctly typed characters.
   init_pair(2, COLOR_RED, -1);            // Incorrectly typed characters.
-  init_pair(3, COLOR_BLACK, COLOR_WHITE); // Pseudo cursor.
+  init_pair(3, COLOR_BLACK, COLOR_WHITE); // "Cursor"
 
   // Cursor position.
   int cursor_x = COLS / 4;
@@ -88,9 +88,16 @@ int main() {
       render_left(typed, words, cursor_x, cursor_y);
       render_right(typed, words, cursor_x, cursor_y);
       refresh();
+
+      // Replace each typed word with a new random word.
+      if (words[typed.size()] == ' ') {
+        int random_index = distribution(engine);
+        words += word_bank[random_index];
+      }
     }
   }
 
   endwin();
+
   return 0;
 }
